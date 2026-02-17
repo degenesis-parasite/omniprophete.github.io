@@ -734,6 +734,7 @@ const allQuestions = [
 let shuffledOrder = [];
 let currentIndex = 0;
 let scores = new Array(22).fill(0); // one per archetype
+let locked = false; // prevents double-click
 
 // ==================== LOGIC ====================
 function shuffle(arr) {
@@ -749,6 +750,7 @@ function startQuiz() {
   shuffledOrder = shuffle([...Array(110).keys()]);
   currentIndex = 0;
   scores = new Array(22).fill(0);
+  locked = false;
   showScreen('quiz');
   renderQuestion();
 }
@@ -770,6 +772,9 @@ function renderQuestion() {
 }
 
 function selectAnswer(val) {
+  if (locked) return;
+  locked = true;
+
   // Highlight
   document.querySelectorAll('.answer-btn').forEach(b => {
     b.classList.toggle('selected', parseInt(b.dataset.val) === val);
@@ -787,6 +792,7 @@ function selectAnswer(val) {
       showResults();
     } else {
       renderQuestion();
+      locked = false;
     }
   }, 280);
 }
@@ -855,3 +861,4 @@ function showScreen(name) {
 </script>
 </body>
 </html>
+
